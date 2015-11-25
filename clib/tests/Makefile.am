@@ -19,7 +19,8 @@ check_PROGRAMS = $(TESTS)
 # This determines what gets run by 'make check.'
 TESTS = testarrayreader testcross testaggregate	\
 testrestrict testmerge testbind testgridfield	\
-testsift testdataset testcellarray testtuple testarray
+testsift testdataset testcellarray testtuple \
+testarray testerror
 
 NETCDF_TESTS = testnetcdf testoutput 
 
@@ -100,6 +101,10 @@ testtuple_LDADD = ../libgridfields.la
 
 testarray_SOURCES = testarray.cc
 testarray_LDADD = ../libgridfields.la 
+
+testerror_SOURCES = testerror.cc
+testerror_LDADD = ../libgridfields.la 
+
 
 # if VTK_FOUND
 # testsmallrestrict_SOURCES = testsmallrestrict.cc

@@ -75,7 +75,8 @@ src/expr.cc src/fparser.cc src/grid.cc src/gridfield.cc			\
 src/gridfieldoperator.cc src/implicit0cells.cc src/merge.cc		\
 src/output.cc src/outputtuples.cc src/project.cc src/rankeddataset.cc	\
 src/refrestrict.cc src/restrict.cc src/scaninternal.cc src/sift.cc	\
-src/timing.cc src/tuple.cc src/type.cc src/unarynodemap.cc src/util.cc
+src/timing.cc src/tuple.cc src/type.cc src/unarynodemap.cc src/util.cc \
+src/GFError.cc
 
 if NETCDF_FOUND
 SRCS += src/tonetcdf.cc src/netcdfadaptor.cc 
@@ -96,7 +97,7 @@ src/ordmap.h src/output.h src/outputtuples.h src/partition.h		\
 src/project.h src/rankeddataset.h src/refrestrict.h src/restrict.h	\
 src/scan.h src/scaninternal.h src/sift.h src/subgridordmap.h		\
 src/timing.h src/tuple.h src/type.h src/unarynodemap.h src/util.h   \
-src/gridfields_hash_map.h
+src/gridfields_hash_map.h src/GFError.h
 
 if NETCDF_FOUND
 HDRS += src/tonetcdf.h src/netcdfadaptor.h

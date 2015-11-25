@@ -1,5 +1,6 @@
 #include "config_gridfields.h"
 
+
 #include <string>
 #include <iostream>
 #include <sstream>
@@ -7,7 +8,9 @@
 #include "gridfield.h"
 #include "tuple.h"
 #include "fparser.hh"
+#include "GFError.h"
 extern "C" {
+#include <stdio.h>
 #include <stdarg.h>
 }
 
@@ -40,33 +43,97 @@ void split(const string &text, const string separators, vector<string> &words)
 
 #define MSG_BUFFER_SIZE 1024
 
+std::string myFormatter(const char *fmt, va_list vl){
+
+    stringstream formattedString;
+    int i;
+    bool isFormatSymbol = false;
+
+
+    // Step through the list.
+    for( i = 0; fmt[i] != '\0'; ++i ) {
+
+       if(isFormatSymbol){
+
+           switch( fmt[i] ) {   // Type to expect.
+              case 'i':
+              {
+                 int i = va_arg( vl, int );
+                 formattedString << i;
+                 break;
+              }
+
+              case 'f':
+              {
+                  double f = va_arg( vl, double );
+                  formattedString << f;
+                  break;
+              }
+
+              case 'c':
+              {
+                  char c = va_arg( vl, int );
+                  formattedString << c;
+                  break;
+              }
+
+              case 's':
+              {
+                  char *s = va_arg( vl, char * );
+                  formattedString << s;
+                  break;
+              }
+
+              default:
+              {
+                  break;
+              }
+           }
+
+
+           isFormatSymbol = false;
+      }
+       else if ( fmt[i] == '%' ) {   // Oooh! A format symbol.
+           isFormatSymbol = true;
+       }
+       else {
+           formattedString << fmt[i];
+       }
+    }
+
+    formattedString << endl;
+
+    return formattedString.str();
+
+}
+
+
+
+
 void Fatal(const char *fmt, ...)
 {
-	// vulnerable to buffer overruns!
-	char foo[MSG_BUFFER_SIZE];
-	va_list ap;
-	va_start(ap, fmt);
-	vsnprintf(foo, MSG_BUFFER_SIZE, fmt, ap);
-	va_end(ap);
+    va_list vl;
+    va_start(vl,fmt);
+    string errmsg = myFormatter(fmt,vl);
+    va_end( vl );
 
-	stringstream errmsg;
-	errmsg << foo << endl;
-	cout << "Fatal Error: " << errmsg.str();
-	throw errmsg.str();
+	// cerr << "Fatal Error: " << errmsg;
+
+
+	GFError gfError(errmsg,GF_INTERNAL_ERROR, "",0);
+
+	throw gfError;
+
 }
 
 void Warning(const char *fmt, ...)
 {
-	// vulnerable to buffer overruns!
-	char foo[MSG_BUFFER_SIZE];
-	va_list ap;
-	va_start(ap, fmt);
-	vsnprintf(foo, MSG_BUFFER_SIZE, fmt, ap);
-	va_end(ap);
+    va_list vl;
+    va_start(vl,fmt);
+    string errmsg = myFormatter(fmt,vl);
+    va_end( vl );
 
-	stringstream errmsg;
-	errmsg << foo << endl;
-	cout << "Warning: " << errmsg.str();
+	cerr << "Warning: " << errmsg;
 }
 
 bool same(const string &r, const string &s)
