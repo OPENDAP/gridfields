@@ -56,7 +56,8 @@ std::string myFormatter(const char *fmt, va_list vl){
        if(isFormatSymbol){
 
            switch( fmt[i] ) {   // Type to expect.
-              case 'i':
+           case 'i':
+           case 'd':
               {
                  int i = va_arg( vl, int );
                  formattedString << i;
