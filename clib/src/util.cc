@@ -41,7 +41,6 @@ void split(const string &text, const string separators, vector<string> &words)
 	}
 }
 
-#define MSG_BUFFER_SIZE 1024
 
 std::string myFormatter(const char *fmt, va_list vl){
 
@@ -115,10 +114,8 @@ void Fatal(const char *fmt, ...)
 {
     va_list vl;
     va_start(vl,fmt);
-    string errmsg = myFormatter(fmt,vl);
+    string errmsg = "libgridfields: " + myFormatter(fmt,vl);
     va_end( vl );
-
-	// cerr << "Fatal Error: " << errmsg;
 
 
 	GFError gfError(errmsg,GF_INTERNAL_ERROR, "",0);
@@ -129,12 +126,14 @@ void Fatal(const char *fmt, ...)
 
 void Warning(const char *fmt, ...)
 {
+#ifndef NDEBUG
     va_list vl;
     va_start(vl,fmt);
-    string errmsg = myFormatter(fmt,vl);
+    string errmsg = "libgridfields: " + myFormatter(fmt,vl);
     va_end( vl );
 
 	cerr << "Warning: " << errmsg;
+#endif
 }
 
 bool same(const string &r, const string &s)
