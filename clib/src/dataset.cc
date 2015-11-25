@@ -274,11 +274,11 @@ void Dataset::Apply(const string &unparsedExpr)
 	if (!real_insch.Subsumes(*func_insch)) {
 		stringstream ss;
 		ss << "'" << unparsedExpr << "'" << endl;
-		ss << "required type: ";
+		ss << "requested type(s): ";
 		func_insch->PrintTo(ss);
-		ss << "actual type: ";
+		ss << "available type(s): ";
 		real_insch.PrintTo(ss);
-		Fatal("Type Error in Apply Operator: %s", ss.str().c_str());
+		Fatal("Dataset::Apply() - Name/Type match ERROR encountered when evaluating: %s", ss.str().c_str());
 	}
 
 	//allocate new attributes as necessary to match required output type
