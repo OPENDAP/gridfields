@@ -117,7 +117,6 @@ void Fatal(const char *fmt, ...)
     string errmsg = "libgridfields: " + myFormatter(fmt,vl);
     va_end( vl );
 
-
 	GFError gfError(errmsg,GF_INTERNAL_ERROR, "",0);
 
 	throw gfError;
