@@ -47,3 +47,4 @@ tests/testoutput.cc
 tests/testrestrict
 tests/testsift
 tests/testtuple
+tests/testerror
