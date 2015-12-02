@@ -3,3 +3,8 @@ To Make:
 ./configure
 make
 make check
+
+Note that if you do not want to build gridfields with the netCDF
+library, use --disable-netcdf with ./configure. This is important if
+gridfields is to be used in a program that itself uses/includes/links
+with netCDF.
