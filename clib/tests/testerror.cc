@@ -1,10 +1,11 @@
+
+#include <cstdlib> // for EXIT_SUCCESS...
+
 #include <iostream>
 #include <string>
 #include <sstream>
 #include "src/util.h"
 #include "src/GFError.h"
-
-
 
 int main(int argc, char **argv)
 {

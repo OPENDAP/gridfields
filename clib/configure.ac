@@ -1,7 +1,7 @@
 #                                               -*- Autoconf -*-
 # Process this file with autoconf to produce a configure script.
 
-AC_PREREQ([2.68])
+AC_PREREQ([2.63])
 AC_INIT([gridfields], [1.0.3], [Bill Howe <billhowe@cs.washington.edu>])
 AC_CONFIG_SRCDIR([src/abstractcellarray.h])
 # This has to be named specially since it's included in headers that
@@ -36,12 +36,16 @@ AC_PROG_MAKE_SET
 AC_PROG_LIBTOOL
 
 dnl echo "CC = $CC"
-if test "$CC" = "g++" -o "$CC" == "gcc"
-then
-    AM_CONDITIONAL([COMPILER_IS_GCC],[true])
-else
-    AM_CONDITIONAL([COMPILER_IS_GCC],[false])
-fi
+AS_IF([test "$CC" = "g++" -o "$CC" == "gcc"],
+    [AM_CONDITIONAL([COMPILER_IS_GCC],[true])],
+    [AM_CONDITIONAL([COMPILER_IS_GCC],[false])])
+
+dnl if test "$CC" = "g++" -o "$CC" == "gcc"
+dnl then
+dnl     AM_CONDITIONAL([COMPILER_IS_GCC],[true])
+dnl else
+dnl     AM_CONDITIONAL([COMPILER_IS_GCC],[false])
+dnl fi
 
 AC_ARG_ENABLE([netcdf], [AS_HELP_STRING([--enable/disable-netcdf],
 					[use netcdf (default is yes)])], [], [])
@@ -49,36 +53,53 @@ AC_ARG_ENABLE([netcdf], [AS_HELP_STRING([--enable/disable-netcdf],
 # --enable-netcdf is used and '' if neither is used
 
 netcdf_found_ac=false
+AS_IF([test -z "$enable_netcdf" -o "$enable_netcdf" = "yes"],
+    [AC_CHECK_NETCDF([
+       LIBS="$LIBS $NC_LIBS"
+       LDFLAGS="$LDFLAGS $NC_LDFLAGS"
+       CPPFLAGS="$CPPFLAGS $NC_CPPFLAGS"
+       netcdf_found_ac=true],
+       [echo "*** Use --with-netcdf for the root netcdf directory."
+       echo "*** Otherwise use --with-netcdf-include switch for includes directory"
+       echo "*** and --with-netcdf-libdir switch for libraries directory."
+       AC_MSG_WARN([netcdf library and netcdf headers not found.])],
+       [3])])
 
-if test -z "$enable_netcdf" -o "$enable_netcdf" = "yes"
-then
-AC_CHECK_NETCDF(
-   [
-   LIBS="$LIBS $NC_LIBS"
-   LDFLAGS="$LDFLAGS $NC_LDFLAGS"
-   CPPFLAGS="$CPPFLAGS $NC_CPPFLAGS"
-   netcdf_found_ac=true
-   ],
-   [
-   echo "*** Use --with-netcdf for the root netcdf directory."
-   echo "*** Otherwise use --with-netcdf-include switch for includes directory"
-   echo "*** and --with-netcdf-libdir switch for libraries directory."
-   AC_MSG_WARN([netcdf library and netcdf headers not found.])
-   ],[3]
-)
-fi
+dnl if test -z "$enable_netcdf" -o "$enable_netcdf" = "yes"
+dnl then
+dnl AC_CHECK_NETCDF(
+dnl    [
+dnl    LIBS="$LIBS $NC_LIBS"
+dnl    LDFLAGS="$LDFLAGS $NC_LDFLAGS"
+dnl    CPPFLAGS="$CPPFLAGS $NC_CPPFLAGS"
+dnl    netcdf_found_ac=true
+dnl    ],
+dnl    [
+dnl    echo "*** Use --with-netcdf for the root netcdf directory."
+dnl    echo "*** Otherwise use --with-netcdf-include switch for includes directory"
+dnl    echo "*** and --with-netcdf-libdir switch for libraries directory."
+dnl    AC_MSG_WARN([netcdf library and netcdf headers not found.])
+dnl    ],[3]
+dnl )
+dnl fi
 
 AM_CONDITIONAL([NETCDF_FOUND], [$netcdf_found_ac])
 
-if test "$netcdf_found_ac" = "true"
-then
-    AC_MSG_CHECKING([Checking the netCDF library version number])
-
+AS_IF([test "$netcdf_found_ac" = "true"],
+    [AC_MSG_CHECKING([Checking the netCDF library version number])
     AC_EGREP_HEADER(nc_inq_user_type, netcdf.h, NETCDF_MAJOR_VERSION=4, NETCDF_MAJOR_VERSION=3)
     AC_DEFINE_UNQUOTED(NETCDF_VERSION, $NETCDF_MAJOR_VERSION, [What version of netcdf were we built with?])
+    AC_MSG_RESULT($NETCDF_MAJOR_VERSION)])
 
-    AC_MSG_RESULT($NETCDF_MAJOR_VERSION)
-fi
+dnl if test "$netcdf_found_ac" = "true"
+dnl then
+dnl     AC_MSG_CHECKING([Checking the netCDF library version number])
+
+dnl     AC_EGREP_HEADER(nc_inq_user_type, netcdf.h, NETCDF_MAJOR_VERSION=4, NETCDF_MAJOR_VERSION=3)
+dnl     AC_DEFINE_UNQUOTED(NETCDF_VERSION, $NETCDF_MAJOR_VERSION, [What version of netcdf were we built with?])
+
+dnl     AC_MSG_RESULT($NETCDF_MAJOR_VERSION)
+dnl fi
 
 # FIXME
 AM_CONDITIONAL([VTK_FOUND], [false])
@@ -94,8 +115,8 @@ AC_CHECK_HEADERS([fcntl.h float.h stdlib.h string.h sys/time.h unistd.h])
 # Checks for typedefs, structures, and compiler characteristics.
 AC_HEADER_STDBOOL
 
+dnl Do the checks for C++ headers
 AC_LANG_PUSH([C++])
-dnl # Do the checks for C++ headers
 
 # <functional> is not needed...
 # AC_HEADER_TR1_FUNCTIONAL
@@ -120,23 +141,39 @@ AC_LANG_POP([C++])
 
 # These AC_DEFINE calls set values used by a 'glue' header. See 
 # gridfields_hash_map.h.in
-if test "x$have_unordered_map" == "xyes"
-then
-    AC_SUBST([GF_UNORDERED_MAP_HEADER], ["<unordered_map>"])
-    AC_SUBST([GF_HASH_MAP], ["std::unordered_map"])
-elif test "x$have_ext_hash_map" == "xyes"
-then
-    AC_SUBST([GF_UNORDERED_MAP_HEADER], ["<ext/hash_map>"])
+AS_IF([test "x$have_unordered_map" == "xyes"],
+    [AC_SUBST([GF_UNORDERED_MAP_HEADER], ["<unordered_map>"])
+    AC_SUBST([GF_HASH_MAP], ["std::unordered_map"])],
+
+    [test "x$have_ext_hash_map" == "xyes"],
+    [AC_SUBST([GF_UNORDERED_MAP_HEADER], ["<ext/hash_map>"])
     AC_SUBST([GF_HASH_MAP], ["hash_map"])
     AC_SUBST([GF_HASH_MAP_NAMESPACE], ["namespace GF { using namespace __gnu_cxx; }"])
-    AC_SUBST([GF_USE_REHASH], ["#define USE_HASH_MAP_RESIZE"])
-elif test "x$have_tr1_unordered_map" == "xyes"
-then
-    AC_SUBST([GF_UNORDERED_MAP_HEADER], ["<tr1/unordered_map>"])
-    AC_SUBST([GF_HASH_MAP], ["std::tr1::unordered_map"])
-else
-    AC_MSG_ERROR([Could not find a suitable 'unordered map' c++ class.])
-fi
+    AC_SUBST([GF_USE_REHASH], ["#define USE_HASH_MAP_RESIZE"])],
+
+    [test "x$have_tr1_unordered_map" == "xyes"],
+    [AC_SUBST([GF_UNORDERED_MAP_HEADER], ["<tr1/unordered_map>"])
+    AC_SUBST([GF_HASH_MAP], ["std::tr1::unordered_map"])],
+
+    [AC_MSG_ERROR([Could not find a suitable 'unordered map' c++ class.])])
+
+dnl if test "x$have_unordered_map" == "xyes"
+dnl then
+dnl     AC_SUBST([GF_UNORDERED_MAP_HEADER], ["<unordered_map>"])
+dnl     AC_SUBST([GF_HASH_MAP], ["std::unordered_map"])
+dnl elif test "x$have_ext_hash_map" == "xyes"
+dnl then
+dnl     AC_SUBST([GF_UNORDERED_MAP_HEADER], ["<ext/hash_map>"])
+dnl     AC_SUBST([GF_HASH_MAP], ["hash_map"])
+dnl     AC_SUBST([GF_HASH_MAP_NAMESPACE], ["namespace GF { using namespace __gnu_cxx; }"])
+dnl     AC_SUBST([GF_USE_REHASH], ["#define USE_HASH_MAP_RESIZE"])
+dnl elif test "x$have_tr1_unordered_map" == "xyes"
+dnl then
+dnl     AC_SUBST([GF_UNORDERED_MAP_HEADER], ["<tr1/unordered_map>"])
+dnl     AC_SUBST([GF_HASH_MAP], ["std::tr1::unordered_map"])
+dnl else
+dnl     AC_MSG_ERROR([Could not find a suitable 'unordered map' c++ class.])
+dnl fi
 
 AC_C_INLINE
 AC_TYPE_OFF_T
