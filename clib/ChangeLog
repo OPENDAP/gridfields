@@ -1,3 +1,132 @@
+2015-12-02  Nathan Potter  <ndp@opendap.org>
+
+	Updated version number for release.
+
+2015-12-02  billhowe  <billhowe@cs.washington.edu>
+
+	Update README.md
+
+	Create README.md
+
+2015-12-02  James Gallagher  <jgallagher@opendap.org>
+
+	Added a comment about --disable-netcdf
+
+	fill-region on the README so work with more
+
+	Fixed an error in testerror.cc - missing EXIT_SUCCESS definition.
+	... also hacked configure.ac so it uses the AS_IF macro. Just pedantry...
+
+2015-11-25  Nathan Potter  <ndp@opendap.org>
+
+	Improved error message from Dataset:Apply()
+
+	Added NDEBUG check for warning output.
+
+	Added NDEBUG check for warning output.
+
+	First crack at improved error handling
+
+	First crack at improved error handling
+
+	First crack at improved error handling
+
+	Added .gitignore
+
+2014-04-22  jgallagher  <jgallagher@opendap.org>
+
+	Added a spec file and -config script
+	A    gridfields-config.in
+	M    configure.ac
+	M    gridfields.spec
+	M    Makefile.am
+
+2014-04-21  jgallagher  <jgallagher@opendap.org>
+
+	Added stuff to make a RPM
+	A    gridfields.spec
+	A    COPYING
+	M    Makefile.am
+
+	Added the four 'generated source' tests
+	M    configure.ac
+
+	Modified four of the tests so they use generated source since paths to data files are baked into them and those were breaking the distcheck target
+	D    tests/testoutput.cc
+	A    tests/testoutput.cc.in
+	A    tests/testarrayreader.cc.in
+	A    tests/testcross.cc.in
+	D    tests/testarrayreader.cc
+	D    tests/testbind.cc
+	A    tests/testbind.cc.in
+	M    tests/Makefile.am
+	D    tests/testcross.cc
+
+2014-04-11  jgallagher  <jgallagher@opendap.org>
+
+	formatted the code so it's a bit more consistent
+
+2014-04-10  jgallagher  <jgallagher@opendap.org>
+
+	audit
+
+	Reformatted elio.c/.h
+
+2014-04-08  jgallagher  <jgallagher@opendap.org>
+
+	Compiler warnings about deprecated code added - it's bummer but the tr1/unordered_map is not used on Centos 6.
+	M    tests/Makefile.am
+	M    Makefile.am
+
+	Changes for OSX 10.5 - g++ 4.0.0 Removed bugus files in conf - they are generated
+	M    configure.ac
+	D    conf/ltsugar.m4
+	D    conf/libtool.m4
+	D    conf/ltversion.m4
+	D    conf/depcomp
+	D    conf/lt~obsolete.m4
+	D    conf/missing
+	D    conf/ltoptions.m4
+	D    conf/config.guess
+	D    conf/ltmain.sh
+	D    conf/config.sub
+	D    conf/install-sh
+	M    src/access.h
+	M    src/unarynodemap.h
+	M    src/binarynodemap.h
+
+	Build fixes for g++ 4.4.7 on CentOS 6.
+	M    configure.ac
+	M    conf/libtool.m4
+	M    conf/ltversion.m4
+	M    conf/depcomp
+	M    conf/missing
+	M    conf/ltoptions.m4
+	M    conf/config.guess
+	M    conf/ltmain.sh
+	M    conf/config.sub
+	M    conf/install-sh
+	M    src/rankeddataset.h
+	M    src/expr.cc
+	M    src/tuple.cc
+	M    src/cellarray.cc
+	M    src/grid.cc
+
+2014-04-07  jgallagher  <jgallagher@opendap.org>
+
+	More hackery for a decent build...
+	M    ChangeLog
+	M    Makefile.am
+	M    NEWS
+	M    configure.ac
+	_M   src
+	M    src/cell.h
+	M    src/cellarray.h
+	M    src/expr.h
+	M    src/grid.h
+	A    src/gridfields_hash_map.h.in
+	M    src/normnodemap.h
+	M    tests/Makefile.am
 2014-04-04  jgallagher@opendap.org
 
 	Removed warnings except for cast-align, deprecated and
