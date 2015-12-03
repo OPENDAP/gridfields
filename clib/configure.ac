@@ -2,7 +2,7 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ([2.63])
-AC_INIT([gridfields], [1.0.3], [Bill Howe <billhowe@cs.washington.edu>])
+AC_INIT([gridfields], [1.0.4], [Bill Howe <billhowe@cs.washington.edu>])
 AC_CONFIG_SRCDIR([src/abstractcellarray.h])
 # This has to be named specially since it's included in headers that
 # are installed. The config header defines compile-time switches that 
