@@ -1,3 +1,8 @@
+2015-12-04  Nathan Potter  <ndp@opendap.org>
+
+	Changed so gridfields-config returns correct include dir, again.
+
+	Changed so gridfields-config returns correct include dir.
 2015-12-02  Nathan Potter  <ndp@opendap.org>
 
 	Updated version number for release.
