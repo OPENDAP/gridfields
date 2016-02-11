@@ -56,7 +56,7 @@ while test $# -gt 0; do
 	;;
 
     --cflags)
-	echo "-I${includedir}/libgridfields"
+	echo "-I${includedir}"
 	;;
 
     --libs)

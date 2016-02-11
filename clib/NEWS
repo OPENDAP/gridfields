@@ -1,3 +1,14 @@
+Version 1.0.5
+
+Repair bug in gridfields-config script that was returning the incorrect
+include direcoty for the cflags option.
+
+Version 1.0.4
+
+Improved error handling by adding an error object class (GFError) that is 
+thrown. Thus allows client software to catch GridFields errors and return 
+senisble messages to their users.
+
 Version 1.0.3
 
 Fixed the warnings (many many) that were issued when code used this
